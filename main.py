@@ -13,14 +13,18 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 fighter1 = Fighter(200, 300)
 fighter2 = Fighter(700, 300)
 
+clock = pygame.time.Clock()
 
 while True:
+
+    clock.tick(60)
 
     screen.blit(bg_image, (0, 0))
 
     fighter1.draw(screen)
     fighter2.draw(screen)
 
+    fighter1.move()
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:

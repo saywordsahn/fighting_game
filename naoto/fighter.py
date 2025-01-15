@@ -3,11 +3,13 @@ import pygame
 class Fighter:
 
     def __init__(self, x, y):
+        self.x = x
+        self.y = y
         self.rect = pygame.Rect(x, y, 80, 180)
-        self.vel_y = 0
+        self.vel = 0
 
-    def draw(self, surface: pygame.Surface):
-        pygame.draw.rect(surface, (0, 255, 0), self.rect)
+    def draw(self, screen):
+        pygame.draw.rect(screen, (255, 0, 0), self.rect)
 
     def move(self):
         SPEED = 10
@@ -24,16 +26,9 @@ class Fighter:
             dx -= SPEED
 
         if key[pygame.K_w]:
-            self.vel_y = -30
+            self.vel = 30
 
-        self.vel_y += GRAVITY
-        dy += self.vel_y
 
-        if self.rect.bottom + dy > 600 - 110:
-            self.vel_y = 0
-            dy = 600 - 110 - self.rect.bottom
 
         self.rect.x += dx
         self.rect.y += dy
-
-
