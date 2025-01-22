@@ -12,7 +12,7 @@ bg = pygame.image.load('../assets/images/background/background.jpg')
 bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
 
 fighter1 = Fighter(200, 310)
-
+fighter2 = Fighter(400, 310)
 
 def draw_background():
     screen.blit(bg, (0, 0))
@@ -25,8 +25,9 @@ while True:
 
     draw_background()
     fighter1.draw(screen)
+    fighter2.draw(screen)
 
-    fighter1.move()
+    fighter1.move(screen)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
