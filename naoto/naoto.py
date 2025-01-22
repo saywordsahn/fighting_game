@@ -14,7 +14,6 @@ bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
 fighter1 = Fighter(200, 310)
 
 
-
 def draw_background():
     screen.blit(bg, (0, 0))
 
