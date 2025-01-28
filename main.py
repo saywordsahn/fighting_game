@@ -1,5 +1,6 @@
 import pygame
 from fighter import Fighter
+from spritesheet import SpriteSheet
 
 pygame.init()
 
@@ -12,6 +13,9 @@ WHITE = (255, 255, 255)
 bg_image = pygame.image.load('./assets/images/background/background.jpg')
 bg_image = pygame.transform.scale(bg_image, (WIDTH, HEIGHT))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+
+
 
 fighter1 = Fighter(200, 300)
 fighter2 = Fighter(700, 300)
