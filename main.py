@@ -17,7 +17,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 
 
-fighter1 = Fighter(200, 300)
+fighter1 = Fighter(200, 200)
 fighter2 = Fighter(700, 300)
 
 clock = pygame.time.Clock()

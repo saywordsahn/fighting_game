@@ -21,13 +21,15 @@ class Fighter:
         self.is_attacking = False
         self.health = 100
         self.attack_damage = 10
-        idle = pygame.image.load('assets/images/warrior/Sprites/idle.png')
-        warrior_idle_ss = SpriteSheet(idle, (162, 162), 1, 10)
+        idle = pygame.image.load('assets/images/warrior/Sprites/warrior.png').convert_alpha()
+        warrior_idle_ss = SpriteSheet(idle, (162, 162), 7, 10, 4)
         self.images = warrior_idle_ss.load_strip((0, 0), 10)
+        self.offset = [-285, -200]
+
 
     def draw(self, surface: pygame.Surface):
         pygame.draw.rect(surface, (0, 255, 0), self.rect)
-        surface.blit(self.images[0], self.rect)
+        surface.blit(self.images[0], (self.rect.x + self.offset[0], self.rect.y + self.offset[1]))
 
     def take_damage(self, amount):
         self.health -= amount
