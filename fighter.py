@@ -29,12 +29,17 @@ class Fighter:
         self.is_attacking = True
 
         attack_rect = None
+
         if self.facing == Facing.RIGHT:
             attack_rect = pygame.Rect(self.rect.centerx, self.rect.y, 2 * self.rect.width, self.rect.height)
             pygame.draw.rect(screen, (255, 0, 0), attack_rect)
 
-            if attack_rect.colliderect(target.rect):
-                target.take_damage(self.attack_damage)
+        else:
+            attack_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, self.rect.y, 2 * self.rect.width, self.rect.height)
+            pygame.draw.rect(screen, (255, 0, 0), attack_rect)
+
+        if attack_rect.colliderect(target.rect):
+            target.take_damage(self.attack_damage)
 
 
         self.is_attacking = False
@@ -49,9 +54,11 @@ class Fighter:
 
         if not self.is_attacking:
             if key[pygame.K_d]:
+                self.facing = Facing.RIGHT
                 dx += SPEED
 
             if key[pygame.K_a]:
+                self.facing = Facing.LEFT
                 dx -= SPEED
 
             if key[pygame.K_w] and not self.is_jumping:
