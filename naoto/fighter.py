@@ -7,11 +7,8 @@ class Fighter:
         self.x = x
         self.y = y
         self.rect = pygame.Rect(x, y, 80, 180)
-        self.vel = 0
-        self.is_jumping = False
         self.health = 100
-        self.attack_damage = 1
-        self.is_dead = False
+        self.vel = 0
 
     def draw(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect)
