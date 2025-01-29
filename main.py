@@ -35,6 +35,8 @@ while True:
     draw_health_bar(fighter1.health, screen, 20, 20)
     draw_health_bar(fighter2.health, screen, 580, 20)
 
+    fighter1.update(dt)
+
     fighter1.draw(screen)
     fighter2.draw(screen)
 
