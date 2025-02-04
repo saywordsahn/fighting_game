@@ -175,10 +175,6 @@ class Fighter:
             self.vel_y = 0
             self.change_state(FighterState.IDLE)
 
-
-
-
-
     def walk_state(self):
         print('walking state')
         SPEED = 5
@@ -198,6 +194,8 @@ class Fighter:
         else:
             self.change_state(FighterState.IDLE)
 
+        if key[pygame.K_w]:
+            self.change_state(FighterState.JUMPING)
 
     def update(self, dt, screen, target):
 
