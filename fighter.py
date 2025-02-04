@@ -3,6 +3,7 @@ import enum
 import pygame
 from enum import Enum
 
+from input_manager import InputManager
 from spritesheet import SpriteSheet
 
 
@@ -84,6 +85,7 @@ class Fighter:
         self.animator = Animator()
         self.offset = [-285, -200]
         self.change_state(FighterState.IDLE)
+        self.input_manager = InputManager()
 
     def draw(self, surface: pygame.Surface):
         # pygame.draw.rect(surface, (0, 255, 0), self.rect)
@@ -133,13 +135,12 @@ class Fighter:
 
     def idle_state(self):
         print('idle state')
-        key = pygame.key.get_pressed()
 
-        if key[pygame.K_d] or key[pygame.K_a]:
+        if self.input_manager.is_action_pressed('move_left') or self.input_manager.is_action_pressed('move_right'):
             self.change_state(FighterState.WALKING)
-        elif key[pygame.K_w]:
+        elif self.input_manager.is_action_pressed('jump'):
             self.change_state(FighterState.JUMPING)
-        elif key[pygame.K_r]:
+        elif self.input_manager.is_action_pressed('attack'):
             self.change_state(FighterState.ATTACKING)
 
     def attack_state(self):
@@ -155,13 +156,11 @@ class Fighter:
         dx = 0
         dy = 0
 
-        key = pygame.key.get_pressed()
-
-        if key[pygame.K_d]:
+        if self.input_manager.is_action_pressed('move_right'):
             self.facing = Facing.RIGHT
             dx += SPEED
 
-        if key[pygame.K_a]:
+        if self.input_manager.is_action_pressed('move_left'):
             self.facing = Facing.LEFT
             dx -= SPEED
 
@@ -180,12 +179,10 @@ class Fighter:
         SPEED = 5
         dx = 0
 
-        key = pygame.key.get_pressed()
-
-        if key[pygame.K_d]:
+        if self.input_manager.is_action_pressed('move_right'):
             self.facing = Facing.RIGHT
             dx += SPEED
-        elif key[pygame.K_a]:
+        elif self.input_manager.is_action_pressed('move_left'):
             self.facing = Facing.LEFT
             dx -= SPEED
 
@@ -194,7 +191,7 @@ class Fighter:
         else:
             self.change_state(FighterState.IDLE)
 
-        if key[pygame.K_w]:
+        if self.input_manager.is_action_pressed('jump'):
             self.change_state(FighterState.JUMPING)
 
     def update(self, dt, screen, target):
@@ -209,41 +206,3 @@ class Fighter:
             self.attack_state()
         elif self.state == FighterState.JUMPING:
             self.jump_state()
-
-        # SPEED = 5
-        # GRAVITY = 2
-        # dx = 0
-        # dy = 0
-        #
-        # key = pygame.key.get_pressed()
-        #
-        # if not self.is_attacking:
-        #     if key[pygame.K_d] and self.state != FighterState.JUMPING:
-        #         self.facing = Facing.RIGHT
-        #         dx += SPEED
-        #         self.state = FighterState.WALKING
-        #
-        #     if key[pygame.K_a] and self.state != FighterState.JUMPING:
-        #         self.facing = Facing.LEFT
-        #         dx -= SPEED
-        #         self.state = FighterState.WALKING
-        #
-        #     if key[pygame.K_w] and self.state != FighterState.JUMPING:
-        #         self.vel_y = -30
-        #         self.state = FighterState.JUMPING
-        #
-        #     if key[pygame.K_r]:
-        #         self.attack(screen, target)
-        #
-        # self.vel_y += GRAVITY
-        # dy += self.vel_y
-        #
-        # if self.rect.bottom + dy > 600 - 110:
-        #     self.vel_y = 0
-        #     dy = 600 - 110 - self.rect.bottom
-        #     self.state = FighterState.IDLE
-        #
-        # self.rect.x += dx
-        # self.rect.y += dy
-
-
