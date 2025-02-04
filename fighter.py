@@ -3,6 +3,7 @@ import enum
 import pygame
 from enum import Enum
 
+from animator import Animator
 from input_manager import InputManager
 from spritesheet import SpriteSheet
 
@@ -17,65 +18,13 @@ class Facing(enum.Enum):
     LEFT = 1,
     RIGHT = 2
 
-class Animation:
 
-    def __init__(self, images, is_looped: bool):
-        self.images = images
-        self.current_frame_index = 0
-        self.animation_time = .1
-        self.current_time = 0
-        self.last_updated_time = 0
-        self.is_looped = is_looped
 
-    def update(self, dt):
-        self.current_time += dt
 
-        if self.current_time > self.last_updated_time + self.animation_time:
-            self.current_frame_index += 1
-            self.last_updated_time = self.current_time
-
-    def get_image(self):
-        return self.images[self.current_frame_index % len(self.images)]
-
-    def reset(self):
-        self.current_frame_index = 0
-        self.last_updated_time = 0
-
-    def is_finished(self):
-        if self.current_frame_index > len(self.images) and not self.is_looped:
-            return True
-
-        return False
-
-class Animator:
-
-    def __init__(self):
-        warrior = pygame.image.load('assets/images/warrior/Sprites/warrior.png').convert_alpha()
-        warrior_ss = SpriteSheet(warrior, (162, 162), 7, 10, 4)
-        self.animations = {'idle': Animation(warrior_ss.load_strip((0, 0), 10), True),
-                           'walk': Animation(warrior_ss.load_strip((1, 0), 8), True),
-                           'attack': Animation(warrior_ss.load_strip((3, 0), 7), False),
-                           'jump': Animation(warrior_ss.load_strip((2, 0), 1), True)}
-        self.current_animation = self.animations['idle']
-
-    def play(self, animation_name):
-        self.current_animation = self.animations[animation_name]
-
-        if not self.current_animation.is_looped:
-            self.current_animation.reset()
-
-    def is_stopped(self) -> bool:
-        return self.current_animation.is_finished()
-
-    def update(self, dt):
-        self.current_animation.update(dt)
-
-    def get_frame(self):
-        return self.current_animation.get_image()
 
 class Fighter:
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, input_manager):
         self.rect = pygame.Rect(x, y, 80, 180)
         self.vel_y = 0
         self.facing = Facing.RIGHT
@@ -85,7 +34,7 @@ class Fighter:
         self.animator = Animator()
         self.offset = [-285, -200]
         self.change_state(FighterState.IDLE)
-        self.input_manager = InputManager()
+        self.input_manager = input_manager
 
     def draw(self, surface: pygame.Surface):
         # pygame.draw.rect(surface, (0, 255, 0), self.rect)

@@ -1,5 +1,6 @@
 import pygame
 from fighter import Fighter
+from input_manager import InputManager
 from spritesheet import SpriteSheet
 
 pygame.init()
@@ -35,8 +36,21 @@ def load_images(self, sprite_sheet, animation_steps):
 
     return animation_list
 
-fighter1 = Fighter(200, 200)
-fighter2 = Fighter(700, 300)
+input1 = InputManager()
+input1.add_binding('move_left', pygame.K_a)
+input1.add_binding('move_right', pygame.K_d)
+input1.add_binding('jump', pygame.K_w)
+input1.add_binding('attack', pygame.K_r)
+
+input2 = InputManager()
+input2.add_binding('move_left', pygame.K_LEFT)
+input2.add_binding('move_right', pygame.K_RIGHT)
+input2.add_binding('jump', pygame.K_UP)
+input2.add_binding('attack', pygame.K_KP0)
+
+
+fighter1 = Fighter(200, 200, input1)
+fighter2 = Fighter(700, 300, input2)
 
 clock = pygame.time.Clock()
 
@@ -53,12 +67,12 @@ while True:
     draw_health_bar(fighter1.health, screen, 20, 20)
     draw_health_bar(fighter2.health, screen, 580, 20)
 
-    # fighter1.update(dt)
 
     fighter1.draw(screen)
     fighter2.draw(screen)
 
     fighter1.update(dt, screen, fighter2)
+    fighter2.update(dt, screen, fighter1)
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
