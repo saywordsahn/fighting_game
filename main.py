@@ -1,4 +1,7 @@
 import pygame
+
+from animator import Animator
+from animation import Animation
 from fighter import Fighter
 from input_manager import InputManager
 from spritesheet import SpriteSheet
@@ -15,27 +18,6 @@ bg_image = pygame.image.load('./assets/images/background/background.jpg')
 bg_image = pygame.transform.scale(bg_image, (WIDTH, HEIGHT))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-
-
-def load_images(self, sprite_sheet, animation_steps):
-    # extract images from spritesheet
-    animation_list = []
-    for y, animation in enumerate(animation_steps):
-        temp_img_list = []
-        for x in range(animation):
-            temp_img = sprite_sheet.subsurface(x * self.size, y * self.size, self.size, self.size)
-            temp_img_list.append(
-                pygame.transform.scale(temp_img, (self.size * self.image_scale, self.size * self.image_scale)))
-        animation_list.append(temp_img_list)
-        self.vel = 0
-        self.is_jumping = False
-        self.health = 100
-        self.attack_damage = 1
-        self.is_dead = False
-
-
-    return animation_list
-
 input1 = InputManager()
 input1.add_binding('move_left', pygame.K_a)
 input1.add_binding('move_right', pygame.K_d)
@@ -48,9 +30,28 @@ input2.add_binding('move_right', pygame.K_RIGHT)
 input2.add_binding('jump', pygame.K_UP)
 input2.add_binding('attack', pygame.K_KP0)
 
+f1_animator = Animator()
 
-fighter1 = Fighter(200, 200, input1)
-fighter2 = Fighter(700, 300, input2)
+warrior = pygame.image.load('assets/images/warrior/Sprites/warrior.png').convert_alpha()
+warrior_ss = SpriteSheet(warrior, (162, 162), 7, 10, 4)
+f1_animator.add_animation('idle', Animation(warrior_ss.load_strip((0, 0), 10), True))
+f1_animator.add_animation('walk', Animation(warrior_ss.load_strip((1, 0), 8), True))
+f1_animator.add_animation('attack', Animation(warrior_ss.load_strip((3, 0), 7), False))
+f1_animator.add_animation('jump', Animation(warrior_ss.load_strip((2, 0), 1), True))
+
+
+f2_animator = Animator()
+
+wizard = pygame.image.load('assets/images/wizard/Sprites/wizard.png').convert_alpha()
+wizard_ss = SpriteSheet(wizard, (250, 250), 7, 8, 3)
+f2_animator.add_animation('idle', Animation(wizard_ss.load_strip((0, 0), 8), True))
+f2_animator.add_animation('walk', Animation(wizard_ss.load_strip((1, 0), 8), True))
+f2_animator.add_animation('attack', Animation(wizard_ss.load_strip((3, 0), 8), False))
+f2_animator.add_animation('jump', Animation(wizard_ss.load_strip((2, 0), 2), True))
+
+
+fighter1 = Fighter(200, 200, input1, f1_animator)
+fighter2 = Fighter(700, 300, input2, f2_animator)
 
 clock = pygame.time.Clock()
 

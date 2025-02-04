@@ -24,14 +24,14 @@ class Facing(enum.Enum):
 
 class Fighter:
 
-    def __init__(self, x, y, input_manager):
+    def __init__(self, x, y, input_manager, animator):
         self.rect = pygame.Rect(x, y, 80, 180)
         self.vel_y = 0
         self.facing = Facing.RIGHT
         self.is_attacking = False
         self.health = 100
         self.attack_damage = 10
-        self.animator = Animator()
+        self.animator = animator
         self.offset = [-285, -200]
         self.change_state(FighterState.IDLE)
         self.input_manager = input_manager

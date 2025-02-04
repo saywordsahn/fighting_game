@@ -7,13 +7,11 @@ from spritesheet import SpriteSheet
 class Animator:
 
     def __init__(self):
-        warrior = pygame.image.load('assets/images/warrior/Sprites/warrior.png').convert_alpha()
-        warrior_ss = SpriteSheet(warrior, (162, 162), 7, 10, 4)
-        self.animations = {'idle': Animation(warrior_ss.load_strip((0, 0), 10), True),
-                           'walk': Animation(warrior_ss.load_strip((1, 0), 8), True),
-                           'attack': Animation(warrior_ss.load_strip((3, 0), 7), False),
-                           'jump': Animation(warrior_ss.load_strip((2, 0), 1), True)}
-        self.current_animation = self.animations['idle']
+        self.animations = {}
+        self.current_animation = None
+
+    def add_animation(self, animation_name: str, animation):
+        self.animations[animation_name] = animation
 
     def play(self, animation_name):
         self.current_animation = self.animations[animation_name]
