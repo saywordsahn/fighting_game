@@ -1,22 +1,33 @@
 import pygame
 
+
 class Fighter:
 
     def __init__(self, x, y):
         self.x = x
         self.y = y
         self.rect = pygame.Rect(x, y, 80, 180)
+        self.health = 100
         self.vel = 0
-        self.is_jumping = False
 
     def draw(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect)
 
-    def attack(self, screen):
+    def take_damage(self, amount):
+        self.health -= amount
+
+        if self.health <= 0:
+            self.is_dead = True
+
+    def attack(self, screen, opponent):
         attack_rect = pygame.Rect(self.rect.centerx, self.rect.y, 2 * self.rect.width, self.rect.height)
         pygame.draw.rect(screen, (0, 0, 255), attack_rect)
 
-    def move(self, screen):
+        if attack_rect.colliderect(opponent.rect):
+            opponent.take_damage(self.attack_damage)
+
+
+    def move(self, screen, opponent):
         SPEED = 10
         GRAVITY = 2
         dx = 0
@@ -39,7 +50,7 @@ class Fighter:
 
         if key[pygame.K_e]:
             print('attack')
-            self.attack(screen)
+            self.attack(screen, opponent)
 
         self.vel += GRAVITY
         dy += self.vel

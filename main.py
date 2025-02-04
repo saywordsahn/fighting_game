@@ -16,6 +16,24 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 
 
+def load_images(self, sprite_sheet, animation_steps):
+    # extract images from spritesheet
+    animation_list = []
+    for y, animation in enumerate(animation_steps):
+        temp_img_list = []
+        for x in range(animation):
+            temp_img = sprite_sheet.subsurface(x * self.size, y * self.size, self.size, self.size)
+            temp_img_list.append(
+                pygame.transform.scale(temp_img, (self.size * self.image_scale, self.size * self.image_scale)))
+        animation_list.append(temp_img_list)
+        self.vel = 0
+        self.is_jumping = False
+        self.health = 100
+        self.attack_damage = 1
+        self.is_dead = False
+
+
+    return animation_list
 
 fighter1 = Fighter(200, 200)
 fighter2 = Fighter(700, 300)
