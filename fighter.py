@@ -53,7 +53,8 @@ class Animator:
         warrior_ss = SpriteSheet(warrior, (162, 162), 7, 10, 4)
         self.animations = {'idle': Animation(warrior_ss.load_strip((0, 0), 10), True),
                            'walk': Animation(warrior_ss.load_strip((1, 0), 8), True),
-                           'attack': Animation(warrior_ss.load_strip((3, 0), 7), False)}
+                           'attack': Animation(warrior_ss.load_strip((3, 0), 7), False),
+                           'jump': Animation(warrior_ss.load_strip((2, 0), 1), True)}
         self.current_animation = self.animations['idle']
 
     def play(self, animation_name):
@@ -118,7 +119,8 @@ class Fighter:
         print('changing state to', new_state)
 
         if self.state == FighterState.JUMPING:
-            pass
+            self.animator.play('jump')
+            self.vel_y = -30
         elif self.state == FighterState.WALKING:
             self.animator.play('walk')
             self.rect.bottom = 600 - 110
@@ -144,6 +146,38 @@ class Fighter:
         print('attack state')
         if self.animator.is_stopped():
             self.change_state(FighterState.IDLE)
+
+    def jump_state(self):
+        print('jumping state')
+
+        SPEED = 5
+        GRAVITY = 2
+        dx = 0
+        dy = 0
+
+        key = pygame.key.get_pressed()
+
+        if key[pygame.K_d]:
+            self.facing = Facing.RIGHT
+            dx += SPEED
+
+        if key[pygame.K_a]:
+            self.facing = Facing.LEFT
+            dx -= SPEED
+
+        self.vel_y += GRAVITY
+        dy += self.vel_y
+
+        self.rect.x += dx
+        self.rect.y += dy
+
+        if self.rect.bottom + dy > 600 - 110:
+            self.vel_y = 0
+            self.change_state(FighterState.IDLE)
+
+
+
+
 
     def walk_state(self):
         print('walking state')
@@ -175,6 +209,8 @@ class Fighter:
             self.walk_state()
         elif self.state == FighterState.ATTACKING:
             self.attack_state()
+        elif self.state == FighterState.JUMPING:
+            self.jump_state()
 
         # SPEED = 5
         # GRAVITY = 2
