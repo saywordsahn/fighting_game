@@ -18,12 +18,13 @@ class Facing(enum.Enum):
 
 class Animation:
 
-    def __init__(self, images):
+    def __init__(self, images, is_looped: bool):
         self.images = images
         self.current_frame_index = 0
         self.animation_time = .1
         self.current_time = 0
         self.last_updated_time = 0
+        self.is_looped = is_looped
 
     def update(self, dt):
         self.current_time += dt
@@ -35,18 +36,34 @@ class Animation:
     def get_image(self):
         return self.images[self.current_frame_index % len(self.images)]
 
+    def reset(self):
+        self.current_frame_index = 0
+        self.last_updated_time = 0
+
+    def is_finished(self):
+        if self.current_frame_index > len(self.images) and not self.is_looped:
+            return True
+
+        return False
+
 class Animator:
 
     def __init__(self):
         warrior = pygame.image.load('assets/images/warrior/Sprites/warrior.png').convert_alpha()
         warrior_ss = SpriteSheet(warrior, (162, 162), 7, 10, 4)
-        self.animations = {'idle': Animation(warrior_ss.load_strip((0, 0), 10)),
-                           'walk': Animation(warrior_ss.load_strip((1, 0), 8)),
-                           'attack': Animation(warrior_ss.load_strip((3, 0), 7))}
+        self.animations = {'idle': Animation(warrior_ss.load_strip((0, 0), 10), True),
+                           'walk': Animation(warrior_ss.load_strip((1, 0), 8), True),
+                           'attack': Animation(warrior_ss.load_strip((3, 0), 7), False)}
         self.current_animation = self.animations['idle']
 
     def play(self, animation_name):
         self.current_animation = self.animations[animation_name]
+
+        if not self.current_animation.is_looped:
+            self.current_animation.reset()
+
+    def is_stopped(self) -> bool:
+        return self.current_animation.is_finished()
 
     def update(self, dt):
         self.current_animation.update(dt)
@@ -125,8 +142,8 @@ class Fighter:
 
     def attack_state(self):
         print('attack state')
-
-        pass
+        if self.animator.is_stopped():
+            self.change_state(FighterState.IDLE)
 
     def walk_state(self):
         print('walking state')
@@ -156,6 +173,8 @@ class Fighter:
             self.idle_state()
         elif self.state == FighterState.WALKING:
             self.walk_state()
+        elif self.state == FighterState.ATTACKING:
+            self.attack_state()
 
         # SPEED = 5
         # GRAVITY = 2
