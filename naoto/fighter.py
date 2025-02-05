@@ -1,17 +1,38 @@
 import pygame
+from animation import Animation
+
+def load_ss(num_cols, row):
+    fighter_ss = pygame.image.load('../assets/images/warrior/Sprites/warrior.png')
+
+    images = []
+
+    for i in range(num_cols):
+        slice = fighter_ss.subsurface(i * 162, row * 162, 162, 162)
+        scaled_slice = pygame.transform.scale(slice, (162 * 4, 162 * 4))
+        images.append(scaled_slice)
+
+    return images
 
 
 class Fighter:
 
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
+
+        self.idle_animation = Animation(load_ss(10, 0))
+        self.walk_animation = Animation(load_ss(8, 1))
+        self.attack_animation = Animation(load_ss(7, 3))
+        self.current_animation = self.idle_animation
+
         self.rect = pygame.Rect(x, y, 80, 180)
         self.health = 100
         self.vel = 0
 
     def draw(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect)
+        screen.blit(self.current_animation.get_frame(), (self.rect.x - 280, self.rect.y - 220))
+
+    def update(self, dt):
+        self.current_animation.update(dt)
 
     def take_damage(self, amount):
         self.health -= amount

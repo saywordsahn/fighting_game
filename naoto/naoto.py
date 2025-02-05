@@ -1,6 +1,5 @@
 import pygame
 from fighter import Fighter
-from animation import Animation
 
 pygame.init()
 
@@ -17,24 +16,10 @@ fighter2 = Fighter(500, 310)
 
 images = []
 
-def load_ss(num_cols, row):
-    fighter_ss = pygame.image.load('../assets/images/warrior/Sprites/warrior.png')
-
-    images = []
-
-    for i in range(num_cols):
-        slice = fighter_ss.subsurface(i * 162, row * 162, 162, 162)
-        scaled_slice = pygame.transform.scale(slice, (162 * 4, 162 * 4))
-        images.append(scaled_slice)
-
-    return images
 
 
 
 
-idle_animation = Animation(load_ss(10, 0))
-walk_animation = Animation(load_ss(8, 1))
-attack_animation = Animation(load_ss(7, 3))
 
 def draw_background():
     screen.blit(bg, (0, 0))
@@ -53,15 +38,12 @@ while True:
     draw_health(20, 20, fighter1.health, screen)
     draw_health(580, 20, fighter2.health, screen)
 
+    fighter1.update(dt)
+    fighter2.update(dt)
+
     fighter1.draw(screen)
     fighter2.draw(screen)
-    screen.blit(idle_animation.get_frame(), (-200, 0))
-    screen.blit(walk_animation.get_frame(), (200, 0))
-    screen.blit(attack_animation.get_frame(), (400, 0))
 
-    idle_animation.update(dt)
-    walk_animation.update(dt)
-    attack_animation.update(dt)
     fighter1.move(screen, fighter2)
     fighter2.move(screen, fighter1)
 
