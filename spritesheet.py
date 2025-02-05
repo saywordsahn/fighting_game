@@ -24,8 +24,7 @@ class SpriteSheet:
         image.set_colorkey((0, 0, 0))
         return image
 
-    def load_strip(self, start: tuple[int, int], num_frames):
-
+    def load_strip(self, start, num_frames):
         strip = []
 
         row = start[0]
