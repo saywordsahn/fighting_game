@@ -26,10 +26,16 @@ class Fighter:
         self.rect = pygame.Rect(x, y, 80, 180)
         self.health = 100
         self.vel = 0
+        self.facing_right = True
 
     def draw(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect)
-        screen.blit(self.current_animation.get_frame(), (self.rect.x - 280, self.rect.y - 220))
+        if self.facing_right:
+            screen.blit(self.current_animation.get_frame(), (self.rect.x - 280, self.rect.y - 220))
+        else:
+            img = pygame.transform.flip(self.current_animation.get_frame(), True, False).convert_alpha()
+            screen.blit(img, (self.rect.x - 280, self.rect.y - 220))
+
 
     def update(self, dt):
         self.current_animation.update(dt)
@@ -56,11 +62,18 @@ class Fighter:
 
         key = pygame.key.get_pressed()
 
+        # d key is down
         if key[pygame.K_d]:
             dx += SPEED
-
-        if key[pygame.K_a]:
+            self.current_animation = self.walk_animation
+            self.facing_right = True
+        # a key is down
+        elif key[pygame.K_a]:
             dx -= SPEED
+            self.current_animation = self.walk_animation
+            self.facing_right = False
+        else:
+            self.current_animation = self.idle_animation
 
         # this should make us jump when our char is on the ground
         if key[pygame.K_w]:
