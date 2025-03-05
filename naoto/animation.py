@@ -16,5 +16,15 @@ class Animation:
             self.current_index += 1
             self.last_updated_time = self.current_time
 
+    def reset(self):
+        self.current_index = 0
+
+    def is_finished(self):
+
+        if self.current_index >= len(self.images):
+            return True
+
+        return False
+
     def get_frame(self):
         return self.images[self.current_index % len(self.images)]

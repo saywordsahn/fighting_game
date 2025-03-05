@@ -38,14 +38,11 @@ while True:
     draw_health(20, 20, fighter1.health, screen)
     draw_health(580, 20, fighter2.health, screen)
 
-    fighter1.update(dt)
-    fighter2.update(dt)
-
     fighter1.draw(screen)
     fighter2.draw(screen)
 
-    fighter1.move(screen, fighter2)
-    fighter2.move(screen, fighter1)
+    fighter1.update(dt, screen, fighter2)
+    fighter2.update(dt, screen, fighter1)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
