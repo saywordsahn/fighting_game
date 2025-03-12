@@ -1,5 +1,6 @@
 import pygame
 from fighter import Fighter
+from animation import Animation
 
 pygame.init()
 
@@ -11,15 +12,69 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 bg = pygame.image.load('../assets/images/background/background.jpg')
 bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
 
-fighter1 = Fighter(200, 310)
-fighter2 = Fighter(500, 310)
+def load_ss(image, num_cols, row, size, scale):
+
+    images = []
+
+    for i in range(num_cols):
+        slice = image.subsurface(i * size, row * size, size, size)
+        scaled_slice = pygame.transform.scale(slice, (size * scale, size * scale))
+        images.append(scaled_slice)
+
+    return images
+
+warrior_ss = pygame.image.load('../assets/images/warrior/Sprites/warrior.png')
+wizard_ss = pygame.image.load('../assets/images/wizard/Sprites/wizard.png')
+
+warrior_animations = {
+            'idle': Animation(load_ss(warrior_ss, 10, 0, 162, 4)),
+            'walk': Animation(load_ss(warrior_ss, 8, 1, 162, 4)),
+            'attack': Animation(load_ss(warrior_ss, 7, 3, 162, 4)),
+            'jump': Animation(load_ss(warrior_ss, 1, 2, 162, 4)),
+            'death': Animation(load_ss(warrior_ss, 7, 6, 162, 4))
+        }
+
+warrior_input_map = {
+    'walk_left': pygame.K_a,
+    'walk_right': pygame.K_d,
+    'jump': pygame.K_w,
+    'attack': pygame.K_e
+}
+
+wizard_animations = {
+            'idle': Animation(load_ss(wizard_ss, 8, 0, 250, 3)),
+            'walk': Animation(load_ss(wizard_ss, 8, 1, 250, 3)),
+            'attack': Animation(load_ss(wizard_ss, 8, 3, 250, 3)),
+            'jump': Animation(load_ss(wizard_ss, 2, 2, 250, 3)),
+            'death': Animation(load_ss(wizard_ss, 7, 6, 250, 3))
+}
+
+wizard_input_map = {
+            'walk_left': pygame.K_LEFT,
+            'walk_right': pygame.K_RIGHT,
+            'jump': pygame.K_UP,
+            'attack': pygame.K_KP0
+        }
+
+
+fighter1 = Fighter(200, warrior_animations, warrior_input_map, (280, 220))
+fighter2 = Fighter(500, wizard_animations, wizard_input_map, (340, 320))
 
 images = []
 
 
 
 
+def load_ss(image, num_cols, row, size):
 
+    images = []
+
+    for i in range(num_cols):
+        slice = image.subsurface(i * size, row * size, size, size)
+        scaled_slice = pygame.transform.scale(slice, (size * 4, size * 4))
+        images.append(scaled_slice)
+
+    return images
 
 def draw_background():
     screen.blit(bg, (0, 0))

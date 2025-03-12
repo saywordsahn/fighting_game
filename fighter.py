@@ -18,10 +18,6 @@ class Facing(enum.Enum):
     LEFT = 1,
     RIGHT = 2
 
-
-
-
-
 class Fighter:
 
     def __init__(self, x, y, input_manager, animator):
