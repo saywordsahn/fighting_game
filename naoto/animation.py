@@ -21,7 +21,7 @@ class Animation:
 
     def is_finished(self):
 
-        if self.current_index >= len(self.images):
+        if self.current_index >= len(self.images) - 1:
             return True
 
         return False

@@ -7,14 +7,12 @@ from animation import Animation
 
 
 
-
-
-
 class PlayerState(enum.Enum):
     IDLE = 1
     MOVING = 2
     ATTACKING = 3
     JUMPING = 4
+    DEAD = 5
 
 
 
@@ -108,7 +106,6 @@ class Fighter:
         if self.current_animation.is_finished():
             self.change_state(PlayerState.IDLE)
 
-
     def jump_state(self, dt):
         SPEED = 10
         GRAVITY = 2
@@ -140,6 +137,12 @@ class Fighter:
         self.rect.x += dx
         self.rect.y += dy
 
+    def dead_state(self, dt):
+        if not self.current_animation.is_finished():
+            self.current_animation.update(dt)
+
+
+
     # you must use change_state to change the players state
     def change_state(self, new_state):
         self.state = new_state
@@ -154,6 +157,9 @@ class Fighter:
         elif self.state == PlayerState.JUMPING:
             self.current_animation = self.jump_animation
             self.vel = -30
+        elif self.state == PlayerState.DEAD:
+            self.current_animation = self.death_animation
+            self.current_animation.reset()
 
     def update(self, dt, screen, opponent):
 
@@ -165,12 +171,17 @@ class Fighter:
             self.attack_state(dt, screen, opponent)
         elif self.state == PlayerState.JUMPING:
             self.jump_state(dt)
+        elif self.state == PlayerState.DEAD:
+            self.dead_state(dt)
 
     def take_damage(self, amount):
-        self.health -= amount
 
-        if self.health <= 0:
-            self.is_dead = True
+        if self.state != PlayerState.DEAD:
+            self.health -= amount
+
+            if self.health <= 0:
+                self.change_state(PlayerState.DEAD)
+
 
     def attack(self, screen, opponent):
 
