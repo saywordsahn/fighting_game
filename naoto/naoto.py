@@ -1,6 +1,7 @@
 import pygame
 from fighter import Fighter
 from animation import Animation
+from enemy import Enemy
 
 pygame.init()
 
@@ -23,8 +24,12 @@ def load_ss(image, num_cols, row, size, scale):
 
     return images
 
+
+toaster_bot_ss = pygame.image.load('../assets/images/Toaster Bot/all.png')
 warrior_ss = pygame.image.load('../assets/images/warrior/Sprites/warrior.png')
 wizard_ss = pygame.image.load('../assets/images/wizard/Sprites/wizard.png')
+
+enemy = Enemy(200)
 
 warrior_animations = {
             'idle': Animation(load_ss(warrior_ss, 10, 0, 162, 4)),
@@ -55,6 +60,8 @@ wizard_input_map = {
             'jump': pygame.K_UP,
             'attack': pygame.K_KP0
         }
+
+
 
 
 fighter1 = Fighter(200, warrior_animations, warrior_input_map, (280, 220))
@@ -95,6 +102,7 @@ while True:
 
     fighter1.draw(screen)
     fighter2.draw(screen)
+    # enemy.draw(screen)
 
     fighter1.update(dt, screen, fighter2)
     fighter2.update(dt, screen, fighter1)
